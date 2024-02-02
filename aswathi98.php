@@ -1,5 +1,5 @@
 <?php
-// Database connection 
+// Database connection (replace with your credentials)
 $servername = "your servername";
 $username = "your username";
 $password = "your password";
@@ -45,6 +45,11 @@ $logsTableSql = "CREATE TABLE IF NOT EXISTS logs (
 )";
 
 $conn->query($logsTableSql);
+//User authentication
+function is_authenticated() {
+    // Implement user authentication logic here
+    return true; 
+}
 //File type validation
 function validateFileType($fileExtension) {
     $allowedExtensions = ["jpg", "png", "pdf", "docx"];
@@ -62,13 +67,13 @@ function sanitizeAndGenerateFileName($originalFileName) {
     $uniqueFileName = $sanitizedFileName . '_' . uniqid() . '.' . pathinfo($originalFileName, PATHINFO_EXTENSION);
     return $uniqueFileName;
 }
-
+//File upload directory
 function handleFileUpload($conn, $userId) {
     
     logToFile($conn, $userId, $_SERVER['REMOTE_ADDR'], $fileName, $uploadStatus, $logMessage);
 }
 
-
+//Logging
 function logToFile($conn, $userId, $ipAddress, $fileName, $uploadStatus, $logMessage) {
     $logInsertSql = "INSERT INTO logs (user_id, ip_address, file_name, upload_status, log_message) 
                      VALUES ('$userId', '$ipAddress', '$fileName', '$uploadStatus', '$logMessage')";
@@ -81,3 +86,8 @@ header("X-Content-Type-Options: nosniff");
 header("X-Frame-Options: DENY");
 header("X-XSS-Protection: 1; mode=block");
 ?>
+Testing:
+1 Test the system with various file types, sizes, and scenarios.
+2 Verify that logs are correctly recorded in the database.
+3 Ensure that security headers are present in the HTTP response.
+4 Confirm that unauthorized users cannot upload files.
